@@ -10,36 +10,198 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Welcome to Accounts Tracking'),
+        backgroundColor: Colors.black,
+        leading: IconButton(
+          onPressed: () {},
+          icon: const Icon(Icons.info_outline, color: Colors.white, size: 32),
+        ),
+        title: const Text(
+          'WELCOME',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 32,
+          ),
+        ),
         centerTitle: true,
+        elevation: 0, // Gölgeyi kaldır
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-        child: ListView.builder(
-          itemCount: 5,
-          itemBuilder: (context, index) {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(
+              "images/background.png",
+            ), // 📌 Arka plan fotoğrafı
+            fit: BoxFit.cover, // Ekrana tam sığdır
+          ),
+        ),
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: width * 0.02,
+            vertical: height * 0.01,
+          ),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Icon(Icons.add_a_photo, size: 48),
-                  const SizedBox(width: 10),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text('Account Name'),
-                      Text('Account Number'),
-
-                      Text('Account Name'),
-                      Text('Account Number'),
+                    children: [
+                      const Text(
+                        "Monthly payment",
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                      const Text(
+                        "569.42 ₺",
+                        style: TextStyle(
+                          fontSize: 22,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ],
+                  ),
+                  GestureDetector(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.03),
+                      height: height * 0.05,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.7),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Center(
+                        child: Text(
+                          "Add new payment",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
-            );
-          },
+              Expanded(
+                child: ListView.builder(
+                  itemCount: 5,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(vertical: height * 0.01),
+                      child: GestureDetector(
+                        onTap: () {},
+                        child: Container(
+                          height: height * 0.15,
+                          width: width,
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.7),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                alignment: Alignment.center,
+                                height: height * 0.3,
+                                width: width * 0.3,
+                                child: const CircleAvatar(
+                                  radius: 45,
+                                  backgroundImage: NetworkImage(
+                                    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Spotify_logo_without_text.svg/2048px-Spotify_logo_without_text.svg.png",
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                alignment: Alignment.center,
+                                height: height * 0.3,
+                                width: width * 0.66,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: const [
+                                            Text(
+                                              "Monthly payment",
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: Color(0xFF1ED760),
+                                              ),
+                                            ),
+                                            Text(
+                                              "100000.42 ₺",
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                color: Color(0xFF1ED760),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(width: width * 0.06),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: const [
+                                            Text(
+                                              "This year payment",
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: Color(0xFF1ED760),
+                                              ),
+                                            ),
+                                            Text(
+                                              "100000.42 ₺",
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                color: Color(0xFF1ED760),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: height * 0.01),
+                                    const Text(
+                                      "Payment Day",
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Color(0xFF1ED760),
+                                      ),
+                                    ),
+                                    const Text(
+                                      "24 March 2025 (23)",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        color: Color(0xFF1ED760),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
