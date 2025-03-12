@@ -1,3 +1,4 @@
+import 'package:accounts_tracking/add_payment_page.dart';
 import 'package:accounts_tracking/homepage.dart';
 import 'package:flutter/material.dart';
 
@@ -10,11 +11,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const Homepage(),
+      home: Homepage(),
     );
   }
 }

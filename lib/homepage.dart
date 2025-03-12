@@ -1,3 +1,4 @@
+import 'package:accounts_tracking/add_payment_page.dart';
 import 'package:flutter/material.dart';
 
 class Homepage extends StatefulWidget {
@@ -29,15 +30,13 @@ class _HomepageState extends State<Homepage> {
           ),
         ),
         centerTitle: true,
-        elevation: 0, // Gölgeyi kaldır
+        elevation: 0,
       ),
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage(
-              "images/background.png",
-            ), // 📌 Arka plan fotoğrafı
-            fit: BoxFit.cover, // Ekrana tam sığdır
+            image: AssetImage("images/background.png"),
+            fit: BoxFit.cover,
           ),
         ),
         child: Padding(
@@ -68,6 +67,14 @@ class _HomepageState extends State<Homepage> {
                     ],
                   ),
                   GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddPaymentPage(),
+                        ),
+                      );
+                    },
                     child: Container(
                       padding: EdgeInsets.symmetric(horizontal: width * 0.03),
                       height: height * 0.05,
