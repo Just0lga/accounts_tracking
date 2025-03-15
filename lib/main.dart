@@ -1,4 +1,4 @@
-import 'package:accounts_tracking/add_payment_page.dart';
+import 'package:accounts_tracking/app_details.dart';
 import 'package:accounts_tracking/homepage.dart';
 import 'package:flutter/material.dart';
 
