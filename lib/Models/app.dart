@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ui';
 
 class App {
@@ -20,4 +21,34 @@ class App {
     required this.paymentMethod,
     required this.startDay,
   });
+
+  // JSON'a dönüştürme
+  Map<String, dynamic> toJson() {
+    return {
+      'appName': appName,
+      'appIcon': appIcon,
+      'appColor': appColor.value, // Color değerini integer olarak kaydet
+      'appMonthlyPrice': appMonthlyPrice,
+      'totalPrice': totalPrice,
+      'moneyType': moneyType,
+      'paymentMethod': paymentMethod,
+      'startDay': startDay,
+    };
+  }
+
+  // JSON'dan App nesnesine dönüştürme
+  factory App.fromJson(Map<String, dynamic> json) {
+    return App(
+      appName: json['appName'],
+      appIcon: json['appIcon'],
+      appColor: Color(
+        json['appColor'],
+      ), // Kaydedilen integer değeri Color'a dönüştür
+      appMonthlyPrice: json['appMonthlyPrice'].toDouble(),
+      totalPrice: json['totalPrice'].toDouble(),
+      moneyType: json['moneyType'],
+      paymentMethod: json['paymentMethod'],
+      startDay: json['startDay'],
+    );
+  }
 }

@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:accounts_tracking/Models/app.dart';
+import 'package:accounts_tracking/Pages/homepage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddPaymentPage extends StatefulWidget {
   const AddPaymentPage({super.key, required this.app});
@@ -68,13 +72,68 @@ class _AddPaymentPageState extends State<AddPaymentPage> {
   late FixedExtentScrollController money2Controller;
   late FixedExtentScrollController paymentMethodController;
 
+  // Selected apps
+  List<App> selected_apps = [];
+  App selected_app = App(
+    appName: "appName",
+    appIcon: "appIcon",
+    appColor: Colors.white,
+    appMonthlyPrice: 0,
+    totalPrice: 0,
+    moneyType: "moneyType",
+    paymentMethod: "paymentMethod",
+    startDay: "startDay",
+  );
+
+  Future<void> saveSelectedApp(App app) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    // Mevcut listeyi al, yoksa boş bir liste oluştur
+    List<String> appList = prefs.getStringList("selected_apps") ?? [];
+
+    // Yeni app'i JSON formatına çevir
+    String appJson = jsonEncode(app.toJson());
+
+    // Eğer zaten ekli değilse listeye ekle
+    if (!appList.contains(appJson)) {
+      appList.add(appJson);
+      await prefs.setStringList("selected_apps", appList);
+      print("Yeni uygulama eklendi: ${prefs.getStringList("selected_apps")}");
+    } else {
+      print("Bu uygulama zaten kayıtlı.");
+    }
+  }
+
+  Future<void> loadSelectedApps() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    // Kaydedilmiş listeyi al
+    List<String>? appList = prefs.getStringList("selected_apps");
+
+    if (appList != null) {
+      setState(() {
+        selected_apps =
+            appList
+                .map((appJson) => App.fromJson(jsonDecode(appJson)))
+                .toList();
+      });
+      print("Yüklenen uygulamalar: $selected_apps");
+    } else {
+      print("Henüz kayıtlı uygulama yok.");
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    selected_app = widget.app;
+    //Apps
+    loadSelectedApps();
+    //Date
     dayController = FixedExtentScrollController(initialItem: selectedDay);
     monthController = FixedExtentScrollController(initialItem: selectedMonth);
     yearController = FixedExtentScrollController(initialItem: selectedYear);
-
+    //Money and type
     moneyTypeController = FixedExtentScrollController(
       initialItem: selectedMoneyType,
     );
@@ -422,7 +481,39 @@ class _AddPaymentPageState extends State<AddPaymentPage> {
 
               SizedBox(height: height * 0.02),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  setState(() {
+                    App selected_app = App(
+                      appName: widget.app.appName,
+                      appIcon: widget.app.appIcon,
+                      appColor: widget.app.appColor,
+                      appMonthlyPrice: double.parse(
+                        money1[selectedMoney1].toString() +
+                            "." +
+                            money2[selectedMoney2].toString(),
+                      ),
+                      totalPrice: double.parse(
+                        money1[selectedMoney1].toString() +
+                            "." +
+                            money2[selectedMoney2].toString(),
+                      ),
+                      moneyType: moneyType[selectedMoneyType],
+                      paymentMethod: paymentMethod[selectedPaymentMethod],
+                      startDay:
+                          days[selectedDay] +
+                          " " +
+                          months[selectedMonth] +
+                          " " +
+                          years[selectedYear],
+                    );
+                  });
+                  saveSelectedApp(selected_app);
+                  print("Saved${selected_app.toJson()}");
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Homepage()),
+                  );
+                },
                 child: Container(
                   alignment: Alignment.center,
                   height: height * 0.06,
