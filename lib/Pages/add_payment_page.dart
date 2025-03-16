@@ -1,8 +1,10 @@
+import 'package:accounts_tracking/Models/app.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AddPaymentPage extends StatefulWidget {
-  const AddPaymentPage({super.key});
+  const AddPaymentPage({super.key, required this.app});
+  final App app;
 
   @override
   State<AddPaymentPage> createState() => _AddPaymentPageState();
@@ -13,6 +15,7 @@ class _AddPaymentPageState extends State<AddPaymentPage> {
     31,
     (index) => (index + 1).toString(),
   );
+
   final List<String> months = [
     "January",
     "February",
@@ -33,13 +36,37 @@ class _AddPaymentPageState extends State<AddPaymentPage> {
     (index) => (2020 + index).toString(),
   );
 
+  final List<String> moneyType = ["₺", "\$", "€", "£"];
+
+  final List<int> money1 = List.generate(5000, (index) => index);
+
+  final List<int> money2 = List.generate(100, (index) => index);
+
+  final List<String> paymentMethod = [
+    "Daily",
+    "Weekly",
+    "Monthly",
+    "Yearly",
+    "Once",
+  ];
+
   int selectedDay = 14;
   int selectedMonth = 5;
   int selectedYear = 5;
 
+  int selectedMoneyType = 1;
+  int selectedMoney1 = 1;
+  int selectedMoney2 = 1;
+  int selectedPaymentMethod = 1;
+
   late FixedExtentScrollController dayController;
   late FixedExtentScrollController monthController;
   late FixedExtentScrollController yearController;
+
+  late FixedExtentScrollController moneyTypeController;
+  late FixedExtentScrollController money1Controller;
+  late FixedExtentScrollController money2Controller;
+  late FixedExtentScrollController paymentMethodController;
 
   @override
   void initState() {
@@ -47,6 +74,15 @@ class _AddPaymentPageState extends State<AddPaymentPage> {
     dayController = FixedExtentScrollController(initialItem: selectedDay);
     monthController = FixedExtentScrollController(initialItem: selectedMonth);
     yearController = FixedExtentScrollController(initialItem: selectedYear);
+
+    moneyTypeController = FixedExtentScrollController(
+      initialItem: selectedMoneyType,
+    );
+    money1Controller = FixedExtentScrollController(initialItem: selectedMoney1);
+    money2Controller = FixedExtentScrollController(initialItem: selectedMoney2);
+    paymentMethodController = FixedExtentScrollController(
+      initialItem: selectedPaymentMethod,
+    );
   }
 
   @override
@@ -54,6 +90,10 @@ class _AddPaymentPageState extends State<AddPaymentPage> {
     dayController.dispose();
     monthController.dispose();
     yearController.dispose();
+    moneyTypeController.dispose();
+    money1Controller.dispose();
+    money2Controller.dispose();
+    paymentMethodController.dispose();
     super.dispose();
   }
 
@@ -116,15 +156,14 @@ class _AddPaymentPageState extends State<AddPaymentPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        const CircleAvatar(
-                          radius: 30,
-                          backgroundImage: AssetImage("images/spotify.png"),
-                        ),
+                        Image.asset(widget.app.appIcon, height: height * 0.08),
+                        SizedBox(height: height * 0.01),
                         Text(
-                          "Spotify",
+                          widget.app.appName,
+                          textAlign: TextAlign.center,
                           style: TextStyle(
-                            color: Color(0xFF1ED760),
-                            fontSize: 32,
+                            color: widget.app.appColor,
+                            fontSize: 24,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -134,10 +173,148 @@ class _AddPaymentPageState extends State<AddPaymentPage> {
                 ],
               ),
               SizedBox(height: height * 0.02),
+              Text(
+                "Select the payment method",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              // PICKER 1
+              Container(
+                height: height * 0.15,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.black.withOpacity(0.7),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    //Money 1
+                    SizedBox(
+                      width: width * 0.2,
+                      child: CupertinoPicker(
+                        scrollController: money1Controller,
+                        itemExtent: 40,
+                        onSelectedItemChanged: (index) {
+                          setState(() {
+                            selectedMoney1 = index;
+                          });
+                        },
+                        children:
+                            money1
+                                .map(
+                                  (money1) => Center(
+                                    child: Text(
+                                      money1.toString(),
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                      ),
+                    ),
+                    Text(
+                      ",",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    //Money 2
+                    SizedBox(
+                      width: width * 0.2,
+                      child: CupertinoPicker(
+                        scrollController: money2Controller,
+                        itemExtent: 40,
+                        onSelectedItemChanged: (index) {
+                          setState(() {
+                            selectedMoney2 = index;
+                          });
+                        },
+                        children:
+                            money2
+                                .map(
+                                  (money2) => Center(
+                                    child: Text(
+                                      money2.toString(),
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                      ),
+                    ),
+                    // Money Type Picker
+                    SizedBox(
+                      width: width * 0.2, // Genişliği manuel ayarladım
+                      child: CupertinoPicker(
+                        scrollController: moneyTypeController,
+                        itemExtent: 40,
+                        onSelectedItemChanged: (index) {
+                          setState(() {
+                            selectedMoneyType = index;
+                          });
+                        },
+                        children:
+                            moneyType
+                                .map(
+                                  (moneyType) => Center(
+                                    child: Text(
+                                      moneyType,
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                      ),
+                    ),
+                    // Payment Method
+                    SizedBox(
+                      width: width * 0.3,
+                      child: CupertinoPicker(
+                        scrollController: paymentMethodController,
+                        itemExtent: 40,
+                        onSelectedItemChanged: (index) {
+                          setState(() {
+                            selectedPaymentMethod = index;
+                          });
+                        },
+                        children:
+                            paymentMethod
+                                .map(
+                                  (paymentMethod) => Center(
+                                    child: Text(
+                                      paymentMethod.toString(),
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: height * 0.01),
               Align(
                 alignment: Alignment.topLeft,
                 child: Text(
-                  "Choose your payment method",
+                  "Select the start date",
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.white,
@@ -145,53 +322,10 @@ class _AddPaymentPageState extends State<AddPaymentPage> {
                   ),
                 ),
               ),
-              for (int i = 0; i < 3; i++)
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: height * 0.01),
-                  child: GestureDetector(
-                    onTap: () {},
-                    child: Container(
-                      height: height * 0.08,
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.7),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Text(
-                            "Student Version",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            "750.92 ₺",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              Text(
-                "Select the start date",
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
               SizedBox(height: height * 0.01),
-              // Pickers
+              // PICKER 2
               Container(
-                height: 200,
+                height: height * 0.2,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: Colors.black.withOpacity(0.7),
@@ -307,26 +441,7 @@ class _AddPaymentPageState extends State<AddPaymentPage> {
                   ),
                 ),
               ),
-              SizedBox(height: height * 0.01),
-              GestureDetector(
-                onTap: () {},
-                child: Row(
-                  children: [
-                    Text(
-                      "If your payment method is not listed, ",
-                      style: TextStyle(fontSize: 12, color: Colors.white),
-                    ),
-                    Text(
-                      " click here",
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+
               SizedBox(height: height * 0.02),
             ],
           ),

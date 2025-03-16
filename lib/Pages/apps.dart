@@ -1,4 +1,6 @@
-import 'package:accounts_tracking/add_payment_page.dart';
+import 'package:accounts_tracking/Models/app.dart';
+import 'package:accounts_tracking/Models/apps_infos.dart';
+import 'package:accounts_tracking/Pages/add_payment_page.dart';
 import 'package:flutter/material.dart';
 
 class Apps extends StatefulWidget {
@@ -9,41 +11,27 @@ class Apps extends StatefulWidget {
 }
 
 class _AppsState extends State<Apps> {
-  final List<String> items = [
-    "Spotify",
-    "Netflix",
-    "Apple Music",
-    "YouTube",
-    "Amazon Prime Video",
-    "Disney+",
-    "Hulu",
-    "HBO Max",
-    "Peacock",
-    "Paramount+",
-    "Apple TV+",
-    "Twitch",
-    "Vimeo",
-    "SoundCloud",
-  ];
-
-  List<String> filteredItems = [];
+  List<App> filteredApps = [];
   TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    filteredItems = List.from(items); // Başlangıçta tüm elemanları göster
+    filteredApps = List.from(
+      AppsInfos.apps,
+    ); // Başlangıçta tüm uygulamaları göster
   }
 
-  void filterItems(String query) {
+  void filterApps(String query) {
     setState(() {
       if (query.isEmpty) {
-        filteredItems = List.from(items);
+        filteredApps = List.from(AppsInfos.apps);
       } else {
-        filteredItems =
-            items
+        filteredApps =
+            AppsInfos.apps
                 .where(
-                  (item) => item.toLowerCase().contains(query.toLowerCase()),
+                  (app) =>
+                      app.appName.toLowerCase().contains(query.toLowerCase()),
                 )
                 .toList();
       }
@@ -70,7 +58,7 @@ class _AppsState extends State<Apps> {
           ),
           child: Column(
             children: [
-              //Back button
+              // Geri Butonu
               Align(
                 alignment: Alignment.centerLeft,
                 child: GestureDetector(
@@ -94,7 +82,8 @@ class _AppsState extends State<Apps> {
                 ),
               ),
               SizedBox(height: height * 0.04),
-              // Search Bar
+
+              // Arama Çubuğu
               Container(
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
@@ -103,7 +92,7 @@ class _AppsState extends State<Apps> {
                 ),
                 child: TextField(
                   controller: searchController,
-                  onChanged: filterItems,
+                  onChanged: filterApps,
                   decoration: InputDecoration(
                     hintText: "Search...",
                     hintStyle: const TextStyle(color: Colors.black),
@@ -114,17 +103,17 @@ class _AppsState extends State<Apps> {
                 ),
               ),
 
-              // List
+              // Uygulama Listesi
               Expanded(
                 child: ListView.builder(
-                  itemCount: (filteredItems.length / 3).ceil(),
+                  itemCount: (filteredApps.length / 3).ceil(),
                   itemBuilder: (context, index) {
                     int startIndex = index * 3;
                     int endIndex =
-                        (startIndex + 3 < filteredItems.length)
+                        (startIndex + 3 < filteredApps.length)
                             ? startIndex + 3
-                            : filteredItems.length;
-                    List<String> rowItems = filteredItems.sublist(
+                            : filteredApps.length;
+                    List<App> rowApps = filteredApps.sublist(
                       startIndex,
                       endIndex,
                     );
@@ -134,13 +123,14 @@ class _AppsState extends State<Apps> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children:
-                            rowItems.map((item) {
+                            rowApps.map((app) {
                               return GestureDetector(
                                 onTap: () {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => AddPaymentPage(),
+                                      builder:
+                                          (context) => AddPaymentPage(app: app),
                                     ),
                                   );
                                 },
@@ -148,9 +138,7 @@ class _AppsState extends State<Apps> {
                                   width: width * 0.3,
                                   alignment: Alignment.center,
                                   decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Color(0xFF1ED760),
-                                    ),
+                                    border: Border.all(color: app.appColor),
                                     color: Colors.black.withOpacity(0.7),
                                     borderRadius: BorderRadius.circular(10),
                                   ),
@@ -162,7 +150,7 @@ class _AppsState extends State<Apps> {
                                         height: height * 0.09,
                                         alignment: Alignment.center,
                                         child: Image.asset(
-                                          "images/spotify.png",
+                                          app.appIcon,
                                           height: height * 0.08,
                                         ),
                                       ),
@@ -171,7 +159,7 @@ class _AppsState extends State<Apps> {
                                         height: height * 0.06,
                                         child: Text(
                                           textAlign: TextAlign.center,
-                                          item,
+                                          app.appName,
                                           style: const TextStyle(
                                             color: Colors.white,
                                             fontSize: 16,

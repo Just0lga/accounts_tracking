@@ -1,5 +1,5 @@
-import 'package:accounts_tracking/app_details.dart';
-import 'package:accounts_tracking/homepage.dart';
+import 'package:accounts_tracking/Pages/add_payment_page.dart';
+import 'package:accounts_tracking/Pages/homepage.dart';
 import 'package:flutter/material.dart';
 
 void main() {
