@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'dart:ui';
 
-// ✅ App Modeli (JSON Dönüştürme İçin)
+// App Modeli (JSON Dönüştürme İçin)
 class App {
   final String appName;
   final String appIcon;
@@ -72,7 +72,7 @@ class _AppManagerPageState extends State<AppManagerPage> {
     _loadSelectedApps();
   }
 
-  // ✅ Kayıtlı Uygulamaları Yükleme
+  // Kayıtlı Uygulamaları Yükleme
   Future<void> _loadSelectedApps() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String>? appJsonList = prefs.getStringList('selected_apps');
@@ -87,7 +87,7 @@ class _AppManagerPageState extends State<AppManagerPage> {
     }
   }
 
-  // ✅ Uygulamaları Kaydetme
+  // Uygulamaları Kaydetme
   Future<void> _saveSelectedApps() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> appJsonList =
@@ -95,7 +95,7 @@ class _AppManagerPageState extends State<AppManagerPage> {
     await prefs.setStringList('selected_apps', appJsonList);
   }
 
-  // ✅ Uygulama Ekle veya Güncelle
+  // Uygulama Ekle veya Güncelle
   void _addOrUpdateApp() {
     String appName = nameController.text;
     double price = double.tryParse(priceController.text) ?? 0.0;
@@ -107,7 +107,7 @@ class _AppManagerPageState extends State<AppManagerPage> {
         (app) => app.appName == appName,
       );
       if (existingIndex != -1) {
-        // 🔄 Güncelleme yap
+        // Güncelleme yap
         selectedApps[existingIndex] = App(
           appName: appName,
           appIcon: "images/default.png",
@@ -119,7 +119,7 @@ class _AppManagerPageState extends State<AppManagerPage> {
           startDay: "Today",
         );
       } else {
-        // 🆕 Yeni ekleme
+        // Yeni ekleme
         selectedApps.add(
           App(
             appName: appName,
@@ -136,13 +136,13 @@ class _AppManagerPageState extends State<AppManagerPage> {
       _saveSelectedApps();
     });
 
-    // 🔄 Formu temizle
+    // Formu temizle
     nameController.clear();
     priceController.clear();
     selectedAppName = "";
   }
 
-  // ✅ Uygulama Seçildiğinde Formu Doldur
+  // Uygulama Seçildiğinde Formu Doldur
   void _editApp(App app) {
     setState(() {
       nameController.text = app.appName;
